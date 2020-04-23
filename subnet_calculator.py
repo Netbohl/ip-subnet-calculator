@@ -1,9 +1,5 @@
 #! /usr/bin/env python
 """
-This script is a part of a tutorial to build a Python subnet Calculator.
-
-The script accepts string inputs in the following formats:
-`192.168.1.0/24` or `192.168.2.0/255.255.255.0`
 
 Example Usage:
 
@@ -13,10 +9,10 @@ Output:
     IP Subnet Calculator
     Subnet: 192.168.0.0/26
 
-    Network:   192.168.0.0/24 (Private Internet)
     Netmask:   255.255.255.0 = 24
     Wildcard:  0.0.0.255
 
+    Network:   192.168.0.0/24 (Private Internet)
     Broadcast: 192.168.0.255
     HostMin:   192.168.0.1
     HostMax:   192.168.0.254
@@ -52,18 +48,35 @@ def prompt_user():
     try:
         IP_network = input(' \n'
                                 '-------------------------------------------------------------------------\n'
-                                'Enter the network address in the one of following formats or "q" to quit.\n'
+                                'Enter the IP address and Subnet in the one of following formats or "q" to quit.\n'
                                 'Network/CIDR - 192.168.1.0/24\n'
                                 'Network/Subnet - 192.168.1.0/255.255.255.0\n'
                                 '---------\n'
                                 'Network: ')
         if IP_network.lower() == 'q':
-            # break # break out of loop
             sys.exit('User quit Subnet Calculator')
         else:
             return IP_network
     except KeyboardInterrupt:
         print('Thanks for using IP subnet calculator')
+
+
+def print_output(network_object, network, notroutable, netmask, network_bits,
+                wildcard_mask, network_broadcast, network_hostmin, network_hostmax, hosts_total):
+    print('_________________________________________')
+    print(' ')
+    print('   IP Subnet Calculator')
+    print(f'Subnet:    {network_object}\n')
+    
+    print(f'Netmask:   {netmask} = {network_bits}')
+    print(f'Wildcard:  {wildcard_mask}\n')
+
+    print(str(f'Network:   {network}') + (f' {notroutable}'))
+    print(f'Broadcast: {network_broadcast}')
+    print(f'Hostmin:   {network_hostmin}')
+    print(f'Hostmax:   {network_hostmax}')
+    print(f'Hosts/Net: {hosts_total}')
+    print(' ')
 
 
 def main(cli_args):
@@ -102,30 +115,15 @@ def main(cli_args):
                 notroutable = '(Private Internet)'
             else:
                 notroutable = '(Global Internet)'
-
-            print('_________________________________________')
-            print(' ')
-            print('   IP Subnet Calculator')
-            print(f'Subnet:    {network_object}\n')
-            
-            print(str(f'Network:   {network}') + (f' {notroutable}'))
-            print(f'Netmask:   {netmask} = {network_bits}')
-            print(f'Wildcard:  {wildcard_mask}\n')
-            
-            print(f'Broadcast: {network_broadcast}')
-            print(f'Hostmin:   {network_hostmin}')
-            print(f'Hostmax:   {network_hostmax}')
-            print(f'Hosts/Net: {hosts_total}')
-            print(' ')
+            # final output
+            print_output(network_object, network, notroutable, netmask, network_bits,
+                            wildcard_mask, network_broadcast, network_hostmin, network_hostmax, hosts_total)
             if cli_args_exist:
                 sys.exit()
         except ValueError:
             print('Be sure to enter IP address in the proper format')
             continue
-        #except:
-        #    print(f'{IP_network} is not a valid network\n'
-        #   'please enter again using the proper format')
-    
+
     print('User quit Subnet Calculator')
     
 if __name__ == "__main__":
